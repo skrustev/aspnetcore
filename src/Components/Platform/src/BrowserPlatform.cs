@@ -5,9 +5,9 @@ namespace Microsoft.AspNetCore.Components.Platform;
 
 internal sealed class BrowserPlatform : IBrowserPlatform, IAsyncDisposable
 {
-    public BrowserPlatform(Microsoft.JSInterop.IJSRuntime jsRuntime)
+    public BrowserPlatform(Microsoft.JSInterop.IJSRuntime jsRuntime, IServiceProvider services)
     {
-        Window = new Window(jsRuntime);
+        Window = new Window(jsRuntime, services);
     }
 
     public Window Window { get; }

@@ -26,11 +26,27 @@ public class PublicApiTest
     [InlineData(typeof(Window))]
     [InlineData(typeof(Storage))]
     [InlineData(typeof(CookieStore))]
+    [InlineData(typeof(RequestConstructor))]
+    [InlineData(typeof(Headers))]
+    [InlineData(typeof(ReadableStream))]
+    [InlineData(typeof(ReadableStreamDefaultReader))]
     public void SharedInstances_CannotBeDisposedByApplicationCode(Type type)
     {
         Assert.False(typeof(IAsyncDisposable).IsAssignableFrom(type));
         Assert.False(typeof(IDisposable).IsAssignableFrom(type));
         Assert.Null(type.GetMethod("DisposeAsync", BindingFlags.Public | BindingFlags.Instance));
+    }
+
+    [Theory]
+    [InlineData(typeof(Response))]
+    [InlineData(typeof(Request))]
+    [InlineData(typeof(Blob))]
+    [InlineData(typeof(File))]
+    [InlineData(typeof(FormData))]
+    public void ObjectsThatACallCreates_AreDisposedByTheCaller(Type type)
+    {
+        Assert.True(typeof(IAsyncDisposable).IsAssignableFrom(type));
+        Assert.NotNull(type.GetMethod("DisposeAsync", BindingFlags.Public | BindingFlags.Instance));
     }
 
     [Fact]
@@ -40,6 +56,15 @@ public class PublicApiTest
         [
             typeof(Storage),
             typeof(CookieStore),
+            typeof(RequestConstructor),
+            typeof(Response),
+            typeof(Request),
+            typeof(Headers),
+            typeof(Blob),
+            typeof(File),
+            typeof(FormData),
+            typeof(ReadableStream),
+            typeof(ReadableStreamDefaultReader),
         ];
 
         var synchronousMethods = liveBrowserObjectTypes

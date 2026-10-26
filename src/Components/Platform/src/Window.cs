@@ -15,10 +15,14 @@ public sealed class Window : IInternalAsyncDisposal
     private readonly Dictionary<(Type FeatureType, string? Subkey), object> _features = [];
     private bool _disposed;
 
-    internal Window(IJSRuntime jsRuntime)
+    internal Window(IJSRuntime jsRuntime, IServiceProvider? services = null)
     {
         _jsRuntime = jsRuntime;
+        Services = services;
     }
+
+    // The services of the scope, for a feature that reads its options.
+    internal IServiceProvider? Services { get; }
 
     /// <summary>
     /// Gets the projection of type <typeparamref name="T"/>, creating it on first access.

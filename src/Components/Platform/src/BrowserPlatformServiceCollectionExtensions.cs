@@ -21,6 +21,7 @@ public static class BrowserPlatformServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        services.AddOptions();
         services.TryAddScoped<IBrowserPlatform, BrowserPlatform>();
 
         return services;
